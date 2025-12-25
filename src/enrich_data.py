@@ -5,22 +5,22 @@ import pandas as pd
 
 
 API = os.getenv('API')
-OMDB_URL = "http://www.omdbapi.com/"
+OMDB_URL = "https://www.omdbapi.com"
 
 #Функция для поиска шоу по заголовку и году
 def omdb_search(title, year):
-    params = {"api_key": API, 
-              "query": title, 
-              "release_date.gte": f"{year}-01-01",
-              "release_date.lte":f"{year}-12-31"
-              } 
-    response = requests.get(f"{OMDB_URL}/?apikey/movie", params=params)
+    params = {
+                "api_key": API, 
+                "t": title, 
+                "y": year
+            } 
+    response = requests.get(f"{OMDB_URL}/?", params=params)
     response.raise_for_status()
     return response.json().get('results', [])
 
 #Функция для получения деталей шоу
 def omdb_details(id_shows):
-    response = requests.get(f"{OMDB_URL}/movie/{id_shows}", params={"api_key": API})
+    response = requests.get(f"{OMDB_URL}/?t/{id_shows}", params={"api_key": API})
     response.raise_for_status()
     return response.json()
 
@@ -70,7 +70,7 @@ enriched_df = enrich_data_with_omdb(df)
 
 
 #Save enrich data
-enriched_df.to_csv("data/enriched/enriched_data.csv", index=False)
+enriched_df.to_csv("data/processed/enriched_data.csv", index=False)
 
 
 
