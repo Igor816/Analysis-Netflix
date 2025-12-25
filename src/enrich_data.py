@@ -1,6 +1,5 @@
 import os
 import time
-from numpy import append
 import requests
 import pandas as pd
 
@@ -40,7 +39,7 @@ def enrich_data_with_omdb(df):
             movie = search_results[0] #Берем первый результат
             details = omdb_details(movie['id']) # Получаем детали
 
-            enriched_rows,append({
+            enriched_rows.append({
                 "shows_id":row['show_id'],
                 "omdb_id":movie['id'],
                 "vote_average":details.get('vote_average'),
