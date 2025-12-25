@@ -4,15 +4,19 @@ import requests
 import pandas as pd
 
 
-API = os.getenv('TMDB_KEY')
-S = "http://www.omdbapi.com/"
+API = os.getenv('API')
+OMDBAPI = "http://www.omdbapi.com/"
 
-def tmdb_search(title, year, typ):
-    params = {"api_key": API, "query": title, "year": year} if typ == "Movie" else \
-                            {"api_key":API, "query":title, "first_air_date_year":year}
-    response = requests.get(f"{S}/search/{typ.lower()}", params=params)
+#Функция для поиска шоу по заголовку и году
+def tmdb_search(title, year):
+    params = {"api_key": API, 
+              "query": title, 
+              "release_date.gte": f"{year}-01-01",
+              "release_date.lte":f"{year}-12-31"
+              } 
+    response = requests.get(f"{OMDBAPI}/?apikey/movie", params=params)
     response.raise_for_status()
-    return (response.json()["results"] or [None])[0]
+    return response.json().get('results', [])
 
 
 def tmdb_details(t, id_):
